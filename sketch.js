@@ -10,7 +10,7 @@ var vel = {
 var col = 0;
 var col2 = 0;
 var col3 = 0;
-
+var jk = 99;
 function setup() {
     createCanvas(600, 600);
 }
