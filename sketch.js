@@ -1,9 +1,9 @@
 var gameState; //1-menu, 2-ingame, 3-endgame.
 var menu;
 var game;
-
+var physics
 function setup() {
-
+    physics=new Physics();
     gameState=2;
     menu = new Menu();
     game = new Game();
@@ -11,7 +11,8 @@ function setup() {
     var x = (windowWidth - width) / 2;
     var y = (windowHeight - height) / 2;
     canv.position(x, y);
-
+     x=constrain(x,-2,602)
+   y=constrain(y,-2,602)
 }
 function draw() {
   background(0);
@@ -25,6 +26,8 @@ function draw() {
     game.render();
     game.send();
   }
+physics.wall(tron);
+  // Physics.collision;
 }
 function keyPressed(){
   if(keyCode==38){

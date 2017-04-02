@@ -1,7 +1,7 @@
 function Physics() {
     var d, dd;
 
-    function collision(tron1, tron2) {
+    this.collision= function(tron1, tron2) {
         d = dist(tron1.pos.x, tron2.pos.x, tron1.pos.y, tron2.pos.y);
         if (d < 10) {
             //set the velocity of the object
@@ -30,11 +30,13 @@ function Physics() {
             }
         }
     }
-}
 
-function wall(tron) {
+
+ this.wall= function(tron) {
     if (tron.pos.x < 0 || tron.pos.x > width || tron.pos.y < 0 || tron.pos.y > height) {
         tron.dead = true;
+      noLoop();
+      alert("You're dead! Please reload to play again!");
     }
 }
 
