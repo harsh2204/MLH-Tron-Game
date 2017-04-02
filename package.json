@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Harsh Gupta",
+  "authors": "Harsh Gupta, Mitesh Ghimire, John Paul, Siddharda Chillapali",
   "license": "ISC",
   "dependencies": {
     "express": "^4.13.4",
