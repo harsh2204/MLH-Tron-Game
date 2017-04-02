@@ -13,9 +13,9 @@ function Tron(name) {
     this.vel = createVector(0,0);
     this.img;
     this.total = 0;
-    Tron.prototype.loadAssets = function() {
-        this.img = loadImage("assets/spaceship-sprite.png");
-    }
+    // Tron.prototype.loadAssets = function() {
+    //     this.img = loadImage("assets/spaceship-sprite.png");
+    // }
     Tron.prototype.makeTron = function(data) {
         //data{
         // x:
@@ -23,13 +23,12 @@ function Tron(name) {
         // colour:
         // id:
         // }
-        this.pos.x = data.x;
-        this.pos.y = data.y;
-        this.colour = data.colour;
+        this.pos = createVector(data.x,data.y);
+        this.colour = color(data.colour[0],data.colour[1],data.colour[2]);
         this.id = data.id;
         this.dead = false;
     }
-    Tron.prototype.show = function() {
+    Tron.prototype.show = function(img) {
         if (this.rotation == 0) {
             translate(this.pos.x-5, this.pos.y-36);
         } else if (this.rotation== HALF_PI){
@@ -44,7 +43,7 @@ function Tron(name) {
         rotate(this.rotation);
         fill(this.colour);
         ellipse(8, 22, 10, 18);
-        image(this.img, 0, 0);
+        image(img, 0, 0);
     }
     Tron.prototype.update = function(data) {
       //take this out when puting in server \/
@@ -53,6 +52,7 @@ function Tron(name) {
       // }
       //uncomment when puting server
         if(!this.dead){
+          this.rotation = data.rotation;
           this.pos.x = data.x;
           this.pos.y = data.y;
           this.vel.x = data.velx;

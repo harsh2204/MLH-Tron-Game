@@ -3,16 +3,17 @@ var express = require('express');
 // Create the app
 var app = express();
 function Tron(name, id){
-  var name =name;
-  var id = id;
-  var dead = false;
-  var x = getRandomArbitrary(50,550);
-  var y = getRandomArbitrary(50,550);
-  var velx = 0;
-  var vely = 0;
-  var colour = [getRandomArbitrary(50,250),getRandomArbitrary(50,250),getRandomArbitrary(50,250)];
-  var total = 0;
-  var booster = 1;
+  this.name =name;
+  this.id = id;
+  this.dead = false;
+  this.x = getRandomArbitrary(50,550);
+  this.y = getRandomArbitrary(50,550);
+  this.velx = 0;
+  this.vely = 0;
+  this.colour = [getRandomArbitrary(50,250),getRandomArbitrary(50,250),getRandomArbitrary(50,250)];
+  this.total = 0;
+  this.booster = 1;
+  this.angle = 0;
 }
 var trons=[];
 function getRandomArbitrary(min, max) {
@@ -41,12 +42,11 @@ var io = require('socket.io')(server);
 io.sockets.on('connection',
   // We are given a websocket object in our function
   function (socket) {
-
     console.log("We have a new client: " + socket.id);
-
     // When this user emits, client side: socket.emit('otherevent',some data);
     socket.on('firstPing',
       function(data) {
+        console.log(data);
         // Data comes in as whatever was sent, including objects
         var newTron = new Tron(data,socket.id);
         trons.push(newTron);
@@ -55,14 +55,24 @@ io.sockets.on('connection',
         // io.sockets.emit('message', "this goes to everyone");
 
         // Send it to all other clients
-        socket.broadcast.emit('firstResp', trons);
+        io.emit('firstResp', trons);
       }
     );
     socket.on('tronUpdateIn',function(directions){
+      // console.log("UPDATING");
       for (var i = 0; i < trons.length; i++) {
         if(trons[i].id === socket.id){
           trons[i].velx = directions.x;
           trons[i].vely = directions.y;
+          if(trons[i].velx>0){
+            trons[i].rotation=2;
+          }else if(trons[i].velx<0){
+            trons[i].rotation=4;
+          }else if(trons[i].vely>0){
+            trons[i].rotation=3;
+          }else if(trons[i].vely<0){
+              trons[i].rotation=1;
+          }
           if(trons[i].total<20){
             trons[i].total++;
           }
@@ -97,6 +107,11 @@ io.sockets.on('connection',
     })
     socket.emit('callBack',trons);
     socket.on('disconnect', function() {
+      for (var i = 0; i < trons.length; i++) {
+        if(trons[i].id===socket.id){
+          trons.splice(i,1);
+        }
+      }
       console.log("Client has disconnected");
     });
   }

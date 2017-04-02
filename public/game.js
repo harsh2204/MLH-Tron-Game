@@ -1,15 +1,30 @@
 var trons = [];
-
+var tronIDs = [];
 function Game() {
     socket = io.connect('http://localhost:3000');
     var tron = new Tron("Harsh");
-    tron.loadAssets();
-    trons.push(tron);
+    var img = loadImage("assets/spaceship-sprite.png");
     socket.emit('firstPing', tron.name);
+    socket.on('firstResp',function(data){
+      for (var i = 0; i < data.length; i++) {
+        if(data[i].id===socket.id){
+          console.log(data);
+          tron.makeTron(data[i]);
+          tronIDs.push(data[i].id);
+          trons.push(tron);
+        }else if(!tronIDs.includes(data[i].id)){
+          var temp = new Tron(data[i].name);
+          temp.makeTron(data[i]);
+          tronIDs.push(data[i].id);
+          trons.push(temp);
+        }
+      }
+    });
     Game.prototype.render = function() {
+      // console.log(socket.id);
         for (var i = 0; i < trons.length; i++) {
             trons[i].makeTrails();
-            trons[i].show();
+            trons[i].show(img);
 
         }
     }
@@ -42,22 +57,16 @@ function Game() {
         // if(tron.total<10){
         //   tron.total++;
         // }
-
-        for (var i = 0; i < trons.length; i++) {
+        if(trons.length<Object.keys(io.sockets.sockets).length){
+          socket.on('callBack', function(data) {
+          for (var i = 0; i < trons.length; i++) {
             //query trons from data
-            trons[i].update(data);
+                  trons[i].update(data[tronIDs.indexOf(trons[i].id)]);
+          }
+        });
         }
     }
-    socket.on('callBack', function(data) {
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].id === socket.id) {
-                trons[0].pos = createVector(data[i].x, data[i].y);
-                tron[0].colour = color(data[i].colour[0], data[i].colour[1], data[i].colour[2]);
-            }else{
-                trons[i].update(data);
-            }
-        }
-    });
+
     Game.prototype.send = function() {
         //send the direction change
         var directions = {

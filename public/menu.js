@@ -1,4 +1,5 @@
 function Menu() {
+    this.gameStarted=true;
     var img;
     Menu.prototype.preload = function() {
         img = loadImage("title.png");
