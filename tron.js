@@ -27,7 +27,11 @@ function Tron(name){
     this.dead = false;
   }
   Tron.prototype.show= function(){
-    translate(this.x+18,this.y+8);
+    if(this.rotation<=90){
+      translate(this.x+8,this.y+18);
+    }else{
+      translate(this.x+16,this.y+36);
+    }
     rotate(this.rotation);
     fill(this.colour);
     ellipse(8,22,10,18);
