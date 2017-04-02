@@ -1,7 +1,9 @@
 var gameState; //1-menu, 2-ingame, 3-endgame.
 var menu;
 var game;
+
 function setup() {
+
     gameState=2;
     menu = new Menu();
     game = new Game();
