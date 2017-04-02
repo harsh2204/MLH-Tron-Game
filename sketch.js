@@ -2,7 +2,7 @@ var gameState; //1-menu, 2-ingame, 3-endgame.
 var menu;
 var game;
 function setup() {
-    gameState=1;
+    gameState=2;
     menu = new Menu();
     game = new Game();
     var canv = createCanvas(600, 600);
@@ -14,7 +14,7 @@ function setup() {
 function draw() {
   background(0);
   if(gameState===1){
-  
+
     menu.render();
     noLoop();
   }
